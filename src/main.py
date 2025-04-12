@@ -6,6 +6,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from src.llm.chat_client import ChatClient
 from src.ui.chat_interface import ChatInterface
+from src.db.db_manager import DBManager
 
 def main():
     """Main application entry point"""
@@ -16,7 +17,8 @@ def main():
     st.set_page_config(
         page_title="ZeroCode LLM Chat",
         page_icon="💬",
-        layout="wide"
+        layout="wide",
+        initial_sidebar_state="auto"
     )
     
     # Check for API keys
@@ -39,13 +41,16 @@ def main():
         """)
         st.stop()
     
+    # Create database manager
+    db_manager = DBManager()
+    
     # Create chat client instance
     # Default to OpenAI if available, otherwise use Anthropic
     default_model = "gpt-3.5-turbo" if openai_api_key else "claude-3-sonnet"
     chat_client = ChatClient(model=default_model)
     
     # Initialize the UI
-    chat_interface = ChatInterface(chat_client)
+    chat_interface = ChatInterface(chat_client, db_manager)
     
     # Run the interface
     chat_interface.run()

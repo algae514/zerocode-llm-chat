@@ -1,6 +1,6 @@
 # ZeroCode LLM Chat Client
 
-A Python-based application that works as a chat client with Large Language Models, supporting both OpenAI and Anthropic models.
+A Python-based application that works as a chat client with Large Language Models, supporting both OpenAI and Anthropic models with persistent conversation storage.
 
 ## Features
 
@@ -8,8 +8,11 @@ A Python-based application that works as a chat client with Large Language Model
 - Support for multiple LLM providers:
   - OpenAI GPT models
   - Anthropic Claude models
+- Persistent conversation storage with SQLite:
+  - Create, view, and delete conversations
+  - Export/import conversations
+  - Rename conversations
 - Model selection and configuration
-- Conversation history management
 - Temperature and response length controls
 
 ## Installation
@@ -85,6 +88,18 @@ You need at least one of these API keys to use the application.
 - claude-3-sonnet (maps to claude-3-sonnet-20240229)
 - claude-3-haiku (maps to claude-3-haiku-20240307)
 
+## Conversation Storage
+
+All conversations are automatically saved to a SQLite database located at:
+- `~/.zerocode-llm-chat/chat_history.db` (on Linux/macOS)
+- `C:\Users\YourUsername\.zerocode-llm-chat\chat_history.db` (on Windows)
+
+This allows you to:
+- Resume conversations after closing the application
+- Maintain a history of all your chats
+- Export conversations to share with others
+- Import conversations from other instances
+
 ## Project Structure
 
 ```
@@ -92,6 +107,7 @@ zerocode/
 ├── docs/              # Documentation
 ├── src/               # Source code
 │   ├── __init__.py
+│   ├── db/            # Database and storage modules
 │   ├── llm/           # LLM integration modules
 │   ├── ui/            # UI components
 │   └── main.py        # Entry point
@@ -105,6 +121,10 @@ zerocode/
 ├── start.bat          # Start script for Windows
 └── README.md          # Project documentation
 ```
+
+## Electron Compatibility
+
+This application is designed to be compatible with Electron for desktop deployment. The SQLite database and UI components are designed to work well in an Electron wrapper.
 
 ## More Information
 
