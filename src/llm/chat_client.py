@@ -9,6 +9,13 @@ import streamlit as st
 class ChatClient:
     """Client for interacting with LLM APIs"""
     
+    # Mapping from display names to actual API model names
+    ANTHROPIC_MODEL_MAP = {
+        "claude-3-opus": "claude-3-opus-20240229",
+        "claude-3-sonnet": "claude-3-sonnet-20240229",
+        "claude-3-haiku": "claude-3-haiku-20240307"
+    }
+    
     def __init__(self, api_key: str = None, model: str = "gpt-3.5-turbo"):
         """
         Initialize the chat client
@@ -91,8 +98,14 @@ class ChatClient:
                 # Create Anthropic client
                 anthropic_client = anthropic.Anthropic(api_key=self.anthropic_api_key)
                 
+                # Map the display model name to the actual API model name
+                actual_model = self.ANTHROPIC_MODEL_MAP.get(self.model, self.model)
+                
+                # Debug information
+                print(f"Using Anthropic model: {actual_model}")
+                
                 response = anthropic_client.messages.create(
-                    model=self.model,
+                    model=actual_model,
                     messages=messages,
                     max_tokens=1000
                 )

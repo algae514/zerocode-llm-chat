@@ -5,7 +5,9 @@
 ### Prerequisites
 
 - Python 3.8 or higher
-- OpenAI API key (or other supported LLM provider API keys)
+- API keys for at least one LLM provider:
+  - OpenAI API key for GPT models
+  - Anthropic API key for Claude models
 
 ### Installation
 
@@ -23,11 +25,21 @@
    ```bash
    cp .env.example .env
    ```
-5. Edit the `.env` file and add your API keys
+5. Edit the `.env` file and add your API keys:
+   ```
+   OPENAI_API_KEY=your_openai_key_here
+   ANTHROPIC_API_KEY=your_anthropic_key_here
+   ```
 
 ### Running the Application
 
 To start the application, run:
+
+```bash
+./start.sh  # On Windows: start.bat
+```
+
+Or use:
 
 ```bash
 streamlit run src/main.py
@@ -43,36 +55,41 @@ The chat interface is built using Streamlit and provides:
 
 - Text input for user messages
 - Display of conversation history
-- Model selection in the sidebar
+- Provider and model selection in the sidebar
+- Temperature and max token controls
 - Option to clear conversation history
 
 ### LLM Integration
 
 The application supports integration with:
 
-- OpenAI GPT models (default)
-- Future support for additional LLM providers
+- OpenAI GPT models
+  - gpt-3.5-turbo
+  - gpt-4
+- Anthropic Claude models
+  - claude-3-opus (maps to claude-3-opus-20240229)
+  - claude-3-sonnet (maps to claude-3-sonnet-20240229)
+  - claude-3-haiku (maps to claude-3-haiku-20240307)
 
-## Customization
+## API Keys
 
-### Changing Default Models
+### OpenAI API Key
 
-You can modify the available models by editing the `chat_interface.py` file:
+To get an OpenAI API key:
+1. Go to https://platform.openai.com/
+2. Sign up or log in
+3. Navigate to API keys section
+4. Create a new secret key
+5. Add this key to your .env file as `OPENAI_API_KEY=your_key_here`
 
-```python
-model = st.selectbox(
-    "Select Model",
-    ["gpt-3.5-turbo", "gpt-4", "claude-3-opus", "claude-3-sonnet"]
-)
-```
+### Anthropic API Key
 
-### Adding New Features
-
-To extend the application, you can:
-
-1. Add new LLM providers in the `llm` module
-2. Enhance the UI in the `ui` module
-3. Add additional settings and configurations
+To get an Anthropic API key:
+1. Go to https://console.anthropic.com/
+2. Sign up or log in
+3. Navigate to the API Keys section
+4. Create a new API key
+5. Add this key to your .env file as `ANTHROPIC_API_KEY=your_key_here`
 
 ## Troubleshooting
 
@@ -83,6 +100,14 @@ If you encounter errors related to API keys:
 1. Check that your `.env` file contains the correct API key
 2. Verify that the key has not expired
 3. Ensure you have sufficient credits/quota with your LLM provider
+
+### Model Not Found Errors
+
+If you see "model not found" errors:
+
+1. Make sure you're using a valid model name
+2. The application handles mapping friendly model names to their full API versions
+3. The model versions may change over time, check the provider's documentation
 
 ### Connection Problems
 
