@@ -3,21 +3,32 @@ Chat Client for interacting with LLMs
 """
 from openai import OpenAI
 from typing import List, Dict, Any, Optional
+import os
+import streamlit as st
 
 class ChatClient:
     """Client for interacting with LLM APIs"""
     
-    def __init__(self, api_key: str, model: str = "gpt-3.5-turbo"):
+    def __init__(self, api_key: str = None, model: str = "gpt-3.5-turbo"):
         """
         Initialize the chat client
         
         Args:
-            api_key: API key for the LLM provider
+            api_key: API key for the LLM provider (default: None, will use environment variables)
             model: Model to use for chat (default: gpt-3.5-turbo)
         """
-        self.client = OpenAI(api_key=api_key)
+        self.openai_api_key = api_key or os.getenv("OPENAI_API_KEY")
+        self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
         self.model = model
         self.conversation_history = []
+        
+        # Initialize OpenAI client
+        if self.openai_api_key:
+            self.openai_client = OpenAI(api_key=self.openai_api_key)
+        else:
+            self.openai_client = None
+            
+        # We'll initialize other clients as needed
     
     def add_message(self, role: str, content: str):
         """
@@ -42,16 +53,57 @@ class ChatClient:
         # Add the user message to the history
         self.add_message("user", user_message)
         
-        # Get response from OpenAI
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=self.conversation_history,
-            temperature=0.7,
-            max_tokens=1000
-        )
-        
-        # Extract the response text
-        response_text = response.choices[0].message.content
+        # Determine which provider to use based on the model
+        if self.model.startswith("gpt"):
+            # Using OpenAI
+            if not self.openai_client:
+                return "Error: OpenAI API key not configured. Please add it to your .env file."
+            
+            try:
+                response = self.openai_client.chat.completions.create(
+                    model=self.model,
+                    messages=self.conversation_history,
+                    temperature=0.7,
+                    max_tokens=1000
+                )
+                
+                response_text = response.choices[0].message.content
+            except Exception as e:
+                response_text = f"Error calling OpenAI API: {str(e)}"
+                
+        elif self.model.startswith("claude"):
+            # Claude models
+            if not self.anthropic_api_key:
+                return "Error: Anthropic API key not configured. Please add ANTHROPIC_API_KEY to your .env file."
+            
+            try:
+                # Import Anthropic library only when needed
+                import anthropic
+                
+                # Convert conversation history to Anthropic format
+                messages = []
+                for msg in self.conversation_history:
+                    if msg["role"] == "user":
+                        messages.append({"role": "user", "content": msg["content"]})
+                    elif msg["role"] == "assistant":
+                        messages.append({"role": "assistant", "content": msg["content"]})
+                
+                # Create Anthropic client
+                anthropic_client = anthropic.Anthropic(api_key=self.anthropic_api_key)
+                
+                response = anthropic_client.messages.create(
+                    model=self.model,
+                    messages=messages,
+                    max_tokens=1000
+                )
+                
+                response_text = response.content[0].text
+            except ImportError:
+                response_text = "Error: The Anthropic Python library is not installed. Please run: pip install anthropic"
+            except Exception as e:
+                response_text = f"Error calling Anthropic API: {str(e)}"
+        else:
+            response_text = f"Unsupported model: {self.model}. Please select a different model."
         
         # Add the assistant's response to history
         self.add_message("assistant", response_text)

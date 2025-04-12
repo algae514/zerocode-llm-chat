@@ -19,14 +19,30 @@ def main():
         layout="wide"
     )
     
-    # Initialize the chat client
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        st.error("No OpenAI API key found. Please set it in your .env file.")
+    # Check for API keys
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+    
+    if not openai_api_key and not anthropic_api_key:
+        st.error("No API keys found. Please add at least one provider API key to your .env file.")
+        st.info("You need either OPENAI_API_KEY or ANTHROPIC_API_KEY (or both) to use this application.")
+        st.write("""
+        ## How to Set Up API Keys
+        
+        1. Create a `.env` file in the root directory of this project
+        2. Add your API keys to the file in this format:
+        ```
+        OPENAI_API_KEY=your_openai_key_here
+        ANTHROPIC_API_KEY=your_anthropic_key_here
+        ```
+        3. Restart the application
+        """)
         st.stop()
     
     # Create chat client instance
-    chat_client = ChatClient(api_key=api_key)
+    # Default to OpenAI if available, otherwise use Anthropic
+    default_model = "gpt-3.5-turbo" if openai_api_key else "claude-3-sonnet"
+    chat_client = ChatClient(model=default_model)
     
     # Initialize the UI
     chat_interface = ChatInterface(chat_client)
