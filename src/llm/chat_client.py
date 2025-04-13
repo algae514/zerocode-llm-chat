@@ -13,7 +13,8 @@ class ChatClient:
     ANTHROPIC_MODEL_MAP = {
         "claude-3-opus": "claude-3-opus-20240229",
         "claude-3-sonnet": "claude-3-sonnet-20240229",
-        "claude-3-haiku": "claude-3-haiku-20240307"
+        "claude-3-haiku": "claude-3-haiku-20240307",
+        "claude-3-7-sonnet": "claude-3-7-sonnet-20250219"
     }
     
     def __init__(self, api_key: str = None, model: str = "gpt-3.5-turbo"):

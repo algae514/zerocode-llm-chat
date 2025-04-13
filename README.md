@@ -1,134 +1,98 @@
 # ZeroCode LLM Chat Client
 
-A Python-based application that works as a chat client with Large Language Models, supporting both OpenAI and Anthropic models with persistent conversation storage.
+A Python-based desktop application that works as a chat client with Large Language Models. ZeroCode provides a clean interface for conversing with AI models from OpenAI and Anthropic, with persistent conversation storage.
 
-## Features
+![ZeroCode LLM Chat](https://via.placeholder.com/800x450.png?text=ZeroCode+LLM+Chat+Client)
 
-- Interactive chat interface using Streamlit
-- Support for multiple LLM providers:
-  - OpenAI GPT models
-  - Anthropic Claude models
-- Persistent conversation storage with SQLite:
-  - Create, view, and delete conversations
-  - Export/import conversations
-  - Rename conversations
-- Model selection and configuration
-- Temperature and response length controls
+## Key Features
 
-## Installation
+- **Multiple AI Providers** - Support for both OpenAI GPT models and Anthropic Claude models
+- **Persistent Conversations** - All chats are automatically saved to a local SQLite database
+- **Conversation Management** - Create, rename, switch between, and delete conversations
+- **Import/Export** - Share conversations with others or back them up as JSON files
+- **Clean UI** - Simple, intuitive interface built with Streamlit
+- **Customizable Settings** - Adjust temperature, response length, and other parameters
+- **Electron Ready** - Built to be packaged as a desktop application with Electron
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.8 or higher
+- An API key for OpenAI, Anthropic, or both
+
+### Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/algae514/zerocode-llm-chat.git
 cd zerocode-llm-chat
 
-# Using setup scripts
-# For Linux/macOS:
+# Run the setup script
+# For macOS/Linux:
 ./setup.sh
 
 # For Windows:
 setup.bat
 ```
 
-Or manually:
+### Configuration
 
-```bash
-# Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows, use: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+1. Create a `.env` file in the root directory:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 ```
 
-## Usage
+2. You need at least one of these API keys to use the application.
+
+### Running
 
 ```bash
-# Using start scripts
-# For Linux/macOS:
+# For macOS/Linux:
 ./start.sh
 
 # For Windows:
 start.bat
 ```
 
-Or manually:
+## Detailed Documentation
 
-```bash
-# Set up your environment variables
-cp .env.example .env
-# Edit .env file with your API keys
-
-# Run the application
-streamlit run src/main.py
-```
-
-## Configuration
-
-Create a `.env` file in the root directory with the following variables:
-
-```
-# OpenAI API Key (for GPT models)
-OPENAI_API_KEY=your_openai_api_key_here
-
-# Anthropic API Key (for Claude models)
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-```
-
-You need at least one of these API keys to use the application.
+For more complete information, see:
+- [Usage Guide](docs/usage.md) - Detailed instructions for using the application
+- [API Keys Guide](docs/api_keys.md) - How to obtain and configure API keys
+- [Developer Guide](docs/developer.md) - Information for developers who want to extend the application
 
 ## Supported Models
 
 ### OpenAI Models
-- gpt-3.5-turbo
-- gpt-4
+- gpt-3.5-turbo - Fast, cost-effective model for most use cases
+- gpt-4 - More capable model for complex tasks
 
 ### Anthropic Claude Models
-- claude-3-opus (maps to claude-3-opus-20240229)
-- claude-3-sonnet (maps to claude-3-sonnet-20240229)
-- claude-3-haiku (maps to claude-3-haiku-20240307)
+- claude-3-opus - Anthropic's most powerful model
+- claude-3-sonnet - Balanced model for most use cases
+- claude-3-haiku - Fast, efficient model for simpler tasks
 
 ## Conversation Storage
 
-All conversations are automatically saved to a SQLite database located at:
-- `~/.zerocode-llm-chat/chat_history.db` (on Linux/macOS)
+All conversations are automatically saved locally at:
+- `~/.zerocode-llm-chat/chat_history.db` (on macOS/Linux)
 - `C:\Users\YourUsername\.zerocode-llm-chat\chat_history.db` (on Windows)
 
-This allows you to:
-- Resume conversations after closing the application
-- Maintain a history of all your chats
-- Export conversations to share with others
-- Import conversations from other instances
+## Privacy & Security
 
-## Project Structure
+- All conversations are stored only on your local machine
+- API keys are stored locally in your `.env` file
+- No data is sent to any servers except the AI provider you choose (OpenAI or Anthropic)
 
-```
-zerocode/
-├── docs/              # Documentation
-├── src/               # Source code
-│   ├── __init__.py
-│   ├── db/            # Database and storage modules
-│   ├── llm/           # LLM integration modules
-│   ├── ui/            # UI components
-│   └── main.py        # Entry point
-├── tests/             # Test files
-├── .env               # Environment variables (not in git)
-├── .env.example       # Example environment file
-├── requirements.txt   # Dependencies
-├── setup.sh           # Setup script for Linux/macOS
-├── setup.bat          # Setup script for Windows
-├── start.sh           # Start script for Linux/macOS
-├── start.bat          # Start script for Windows
-└── README.md          # Project documentation
-```
+## Future Plans
 
-## Electron Compatibility
-
-This application is designed to be compatible with Electron for desktop deployment. The SQLite database and UI components are designed to work well in an Electron wrapper.
-
-## More Information
-
-See the `docs/usage.md` file for detailed usage instructions and troubleshooting.
+- Additional AI providers
+- Conversation search
+- Local model support
+- Customizable themes
+- Desktop applications for all platforms
 
 ## License
 

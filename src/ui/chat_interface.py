@@ -201,7 +201,7 @@ class ChatInterface:
                         st.error("OpenAI API key not found. Please set OPENAI_API_KEY in your .env file.")
                 
                 elif provider == "Anthropic":
-                    anthropic_models = ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"]
+                    anthropic_models = ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku", "claude-3-7-sonnet"]
                     model = st.selectbox("Select Model", anthropic_models)
                     
                     # Check if Anthropic API key is set

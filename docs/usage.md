@@ -1,6 +1,20 @@
 # ZeroCode LLM Chat Client - Usage Guide
 
-## Getting Started
+This guide provides detailed instructions for using the ZeroCode LLM Chat Client.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Getting Started](#getting-started)
+- [Interface Overview](#interface-overview)
+- [Conversation Management](#conversation-management)
+- [Model Settings](#model-settings)
+- [Import & Export](#import-and-export)
+- [Troubleshooting](#troubleshooting)
+- [Electron Usage](#electron-usage)
+
+## Installation
 
 ### Prerequisites
 
@@ -9,194 +23,265 @@
   - OpenAI API key for GPT models
   - Anthropic API key for Claude models
 
-### Installation
+### Installation Steps
 
-1. Clone the repository and navigate to the project directory
+#### Using Setup Scripts (Recommended)
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/algae514/zerocode-llm-chat.git
+   cd zerocode-llm-chat
+   ```
+
+2. Run the setup script:
+   - On macOS/Linux:
+     ```bash
+     ./setup.sh
+     ```
+   - On Windows:
+     ```bash
+     setup.bat
+     ```
+
+This will:
+- Create a virtual environment
+- Install all dependencies
+- Create a template .env file for your API keys
+
+#### Manual Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/algae514/zerocode-llm-chat.git
+   cd zerocode-llm-chat
+   ```
+
 2. Create a virtual environment:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
-3. Install dependencies:
+
+3. Activate the virtual environment:
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+
+4. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-4. Set up your environment variables:
+
+5. Create a .env file:
    ```bash
    cp .env.example .env
    ```
-5. Edit the `.env` file and add your API keys:
+
+6. Edit the .env file to add your API keys.
+
+## Configuration
+
+### API Keys
+
+You'll need at least one of the following API keys:
+
+#### OpenAI API Key
+
+1. Go to [OpenAI Platform](https://platform.openai.com/)
+2. Sign up or log in
+3. Navigate to "API Keys" in your account settings
+4. Create a new secret key
+5. Add to your .env file:
    ```
    OPENAI_API_KEY=your_openai_key_here
+   ```
+
+#### Anthropic API Key
+
+1. Go to [Anthropic Console](https://console.anthropic.com/)
+2. Sign up or log in
+3. Navigate to "API Keys"
+4. Create a new API key
+5. Add to your .env file:
+   ```
    ANTHROPIC_API_KEY=your_anthropic_key_here
    ```
 
-### Running the Application
+## Getting Started
 
-To start the application, run:
+### Launching the Application
 
-```bash
-./start.sh  # On Windows: start.bat
-```
+Run the application using the start script:
 
-Or use:
+- On macOS/Linux:
+  ```bash
+  ./start.sh
+  ```
+- On Windows:
+  ```bash
+  start.bat
+  ```
 
+Or manually:
 ```bash
 streamlit run src/main.py
 ```
 
-This will launch the Streamlit application and open it in your default web browser.
+This will open the application in your default web browser.
 
-## Features
+## Interface Overview
 
-### Chat Interface
+The ZeroCode interface consists of:
 
-The chat interface is built using Streamlit and provides:
+### Sidebar (Left)
+- Conversation list
+- New conversation button
+- Import/Export functions
+- Show/Hide toggle
 
-- Text input for user messages
-- Display of conversation history
-- Provider and model selection in the sidebar
-- Temperature and max token controls
-- Option to clear conversation history
+### Main Chat Area (Right)
+- Conversation title (editable)
+- Settings expander
+- Chat history
+- Message input field
 
-### Conversation Management
+## Conversation Management
 
-The application includes full conversation management features:
+### Creating a New Conversation
 
-- Persistent storage of conversations using SQLite
-- Create, view, and delete conversations
-- Rename conversations
-- Export conversations to JSON files
-- Import conversations from JSON files
+1. Click the "New Conversation" button in the sidebar
+2. Start typing in the message input field
+3. Your messages and the AI's responses will be saved automatically
 
-All conversations are automatically saved to a SQLite database in the user's home directory at:
-- `~/.zerocode-llm-chat/chat_history.db` (on Linux/macOS)
-- `C:\Users\YourUsername\.zerocode-llm-chat\chat_history.db` (on Windows)
+### Switching Between Conversations
 
-### LLM Integration
+Click on any conversation title in the sidebar to load it.
 
-The application supports integration with:
+### Renaming a Conversation
 
-- OpenAI GPT models
-  - gpt-3.5-turbo
-  - gpt-4
-- Anthropic Claude models
-  - claude-3-opus (maps to claude-3-opus-20240229)
-  - claude-3-sonnet (maps to claude-3-sonnet-20240229)
-  - claude-3-haiku (maps to claude-3-haiku-20240307)
+1. Edit the "Conversation Title" text field at the top of the main area
+2. Press Enter to save the new title
 
-## Using the Interface
+### Deleting a Conversation
 
-### Conversation Management
+Click the trash icon (🗑️) next to any conversation in the sidebar.
 
-- **Create New Conversations**: Click the "New Conversation" button in the sidebar
-- **Switch Between Conversations**: Click on a conversation title in the sidebar
-- **Rename Conversations**: Edit the "Conversation Title" text field at the top of the chat
-- **Delete Conversations**: Click the trash icon next to a conversation in the sidebar
-- **Export Conversations**: Click "Export Current Conversation" to save a JSON file
-- **Import Conversations**: Use the file uploader in the sidebar to import a previously exported conversation
+### Organization
 
-### Chat Settings
+Conversations are sorted with the most recently updated at the top.
 
-All settings are available in the "Settings" expander:
+## Model Settings
 
-1. **Provider Selection**: Choose between OpenAI and Anthropic
-2. **Model Selection**: Select a specific model from the chosen provider
-3. **Temperature**: Adjust the randomness of the responses (0.0 to 1.0)
-4. **Max Response Length**: Set the maximum number of tokens for each response
-5. **Clear Chat History**: Reset the current conversation while keeping its title
+Click the "Settings" expander to access model settings:
 
-### API Keys
+### Provider Selection
 
-The application checks for API keys at startup. You'll see status indicators in the Settings panel:
-- Green: The API key is configured
-- Red: The API key is missing or invalid
+Choose between:
+- OpenAI (GPT models)
+- Anthropic (Claude models)
 
-## API Keys
+### Model Selection
 
-### OpenAI API Key
+Select a specific model from the chosen provider:
 
-To get an OpenAI API key:
-1. Go to https://platform.openai.com/
-2. Sign up or log in
-3. Navigate to API keys section
-4. Create a new secret key
-5. Add this key to your .env file as `OPENAI_API_KEY=your_key_here`
+#### OpenAI Models
+- **gpt-3.5-turbo**: Faster and more cost-effective
+- **gpt-4**: More capable for complex tasks
 
-### Anthropic API Key
+#### Anthropic Models
+- **claude-3-opus**: Most powerful model
+- **claude-3-sonnet**: Balanced performance and speed
+- **claude-3-haiku**: Fastest model, good for simple tasks
 
-To get an Anthropic API key:
-1. Go to https://console.anthropic.com/
-2. Sign up or log in
-3. Navigate to the API Keys section
-4. Create a new API key
-5. Add this key to your .env file as `ANTHROPIC_API_KEY=your_key_here`
+### Temperature
+
+Adjust the "temperature" setting (0.0 to 1.0):
+- **Lower values** (0.0-0.3): More consistent, deterministic responses
+- **Medium values** (0.4-0.7): Balanced creativity and coherence
+- **Higher values** (0.8-1.0): More creative, varied, and unpredictable responses
+
+### Max Response Length
+
+Set the maximum length for AI responses (100-4000 tokens).
+
+## Import and Export
+
+### Exporting Conversations
+
+To save a conversation for backup or sharing:
+
+1. Select the conversation you want to export
+2. Click "Export Current Conversation" in the sidebar
+3. The conversation will be saved as a JSON file in your Downloads folder
+
+### Importing Conversations
+
+To import a previously exported conversation:
+
+1. Click "Browse files" under "Import Conversation" in the sidebar
+2. Select the JSON file you want to import
+3. The conversation will be added to your list
 
 ## Troubleshooting
 
-### Database Issues
+### Common Issues
 
-If you encounter issues with the conversation database:
+#### API Key Errors
 
-1. The database file is located at `~/.zerocode-llm-chat/chat_history.db`
-2. You can delete this file to reset all conversations (they will be permanently lost)
-3. If the file becomes corrupted, the application will attempt to create a new one
+If you see "API key not configured" errors:
+1. Check that your .env file contains the correct API key
+2. Verify that the key hasn't expired
+3. Restart the application after making changes to the .env file
 
-### Model Not Found Errors
+#### Database Issues
 
-If you see "model not found" errors:
+If conversations aren't saving properly:
+1. Check permissions on the `~/.zerocode-llm-chat` directory
+2. If the database becomes corrupted, you can delete the `chat_history.db` file (note: this will erase all conversations)
 
-1. Make sure you're using a valid model name
-2. The application handles mapping friendly model names to their full API versions
-3. The model versions may change over time, check the provider's documentation
+#### Model Not Found Errors
 
-### Exported Conversations
+If you receive "model not found" errors:
+1. Verify that you have the correct API key for the selected provider
+2. Check that the model you're trying to use is available with your subscription
+3. Model names and versions may change; check the provider's documentation
 
-Exported conversations are saved as JSON files with the following structure:
-```json
-{
-  "conversation": {
-    "id": "unique-id",
-    "title": "Conversation Title",
-    "model": "model-name",
-    "created_at": "timestamp",
-    "updated_at": "timestamp",
-    "summary": "First message summary..."
-  },
-  "messages": [
-    {
-      "id": 1,
-      "conversation_id": "unique-id",
-      "role": "user",
-      "content": "User message",
-      "timestamp": "timestamp"
-    },
-    {
-      "id": 2,
-      "conversation_id": "unique-id",
-      "role": "assistant",
-      "content": "Assistant response",
-      "timestamp": "timestamp"
-    }
-  ]
-}
-```
+### Data Locations
 
-These files can be imported into any instance of the application.
+- **Configuration**: `.env` file in the application directory
+- **Database**: `~/.zerocode-llm-chat/chat_history.db` (Linux/macOS) or `C:\Users\YourUsername\.zerocode-llm-chat\chat_history.db` (Windows)
+- **Exports**: Saved to your Downloads folder by default
 
-## Electron Integration
+## Electron Usage
 
-This application is designed to be compatible with Electron for desktop deployment:
+### Using the Electron Version
 
-1. The SQLite database uses a local file storage model
-2. All dependencies are compatible with Electron
-3. The UI is responsive and adapts to different window sizes
+If you're using the Electron desktop version:
 
-When packaging as an Electron app:
-- Ensure that API keys are securely stored
-- Update the database path to use the Electron app's data directory
-- Consider adding auto-update functionality
+1. Installation is simplified - just download and run the installer for your platform
+2. API keys are stored in the application's secure storage
+3. The database is stored in the application's data directory
+4. Updates can be installed automatically
 
-## Contributing
+### Converting from Streamlit to Electron
 
-Contributions to improve the application are welcome. Please feel free to submit pull requests or open issues for bugs and feature requests.
+For developers looking to package this as an Electron application:
+
+1. The SQLite database can be easily relocated to the Electron app's data directory
+2. The UI is responsive and will work well in an Electron window
+3. Consider implementing a secure storage solution for API keys
+4. Add a configuration page in the Electron app for API key management
+
+## Advanced Features
+
+### Custom Database Location
+
+To use a custom location for the database, modify `src/db/db_manager.py` to specify your preferred path.
+
+### Adding New Model Providers
+
+Developers can extend the `src/llm/chat_client.py` file to add support for additional providers.
